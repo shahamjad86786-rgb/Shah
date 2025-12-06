@@ -35,6 +35,13 @@
     @csrf
     <div class="row g-4">
 
+        
+        @if(session('any_error'))
+            @foreach(session('any_error') as $error)
+                <p class="text-danger">{{ $error }}</p>
+            @endforeach
+        @endif
+
         <!-- ===========================
              MAIN CLIENT INFORMATION
         ============================ -->
@@ -81,7 +88,7 @@
 
                         <div class="col-6">
                             <label class="form-label text-primary">Aadhar</label>
-                            <input type="number" name="aadhar" class="form-control" maxlength="12" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            <input type="number" name="aadhar" class="form-control"
                                    value="{{ old('aadhar', $data->aadhar ?? '') }}">
                             @error('aadhar') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -91,7 +98,7 @@
                     <div class="row mb-3">
                         <div class="col-6">
                             <label class="form-label text-primary">Phone</label>
-                            <input type="number" name="phone" class="form-control" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            <input type="number" name="phone" class="form-control"
                                    value="{{ old('phone', $data->phone ?? '') }}">
                             @error('phone') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -193,7 +200,7 @@
             <div class="card shadow-sm border-0 rounded-4 text-center">
                 <p class="text-primary">Signature</p>
                 <img id="signaturePreview"
-                     src="{{ $data->signature()?->url ?? $default }}"
+                     src="{{ isset($data) && $data->signature ? Storage::url($data->signature) : $default }}"
                      class="img-fluid">
                 <input type="file" name="signature" id="signature"
                        class="form-control d-none" onchange="previewImage(this,'signaturePreview')">
@@ -205,7 +212,7 @@
             <div class="card shadow-sm border-0 rounded-4 text-center">
                 <p class="text-primary">Aadhar Front</p>
                 <img id="aadharFrontPreview"
-                     src="{{ $data->aadharFront()?->url ?? $default }}"
+                     src="{{ isset($data) && $data->aadhar_front ? Storage::url($data->aadhar_front) : $default }}"
                      class="img-fluid">
                 <input type="file" name="aadhar_front" id="aadhar_front"
                        class="form-control d-none" onchange="previewImage(this,'aadharFrontPreview')">
@@ -217,9 +224,10 @@
             <div class="card shadow-sm border-0 rounded-4 text-center">
                 <p class="text-primary">Aadhar Back</p>
                 <img id="aadharBackPreview"
-                     src="{{ $data->aadharBack()?->url ?? $default }}"
+                     src="{{ isset($data) && $data->aadhar_back ? Storage::url($data->aadhar_back) : $default }}"
                      class="img-fluid">
-                <input type="file" name="aadhar_back" id="aadhar_back" class="form-control d-none" onchange="previewImage(this,'aadharBackPreview')">
+                <input type="file" name="aadhar_back" id="aadhar_back"
+                       class="form-control d-none" onchange="previewImage(this,'aadharBackPreview')">
             </div>
         </div>
 
@@ -228,7 +236,7 @@
             <div class="card shadow-sm border-0 rounded-4 text-center">
                 <p class="text-primary">Pan Card</p>
                 <img id="panCardPreview"
-                     src="{{ $data->panCard()?->url ?? $default }}"
+                     src="{{ isset($data) && $data->pan_card ? Storage::url($data->pan_card) : $default }}"
                      class="img-fluid">
                 <input type="file" name="pan_card" id="pan_card"
                        class="form-control d-none" onchange="previewImage(this,'panCardPreview')">
@@ -343,7 +351,7 @@
 
         // Trigger file input click on image click
         $('#profilePreview').on('click', function () {
-            $('#profilePicture').trigger('click');
+            $('#passport_picture').trigger('click');
         });
 
         $('#signaturePreview').on('click', function () {
@@ -351,15 +359,15 @@
         });
 
         $('#aadharFrontPreview').on('click', function () {
-            $('#aadhar_front').trigger('click');
+            $('#aadharFront').trigger('click');
         });
         
         $('#aadharbackPreview').on('click', function () {
-            $('#aadhar_back').trigger('click');
+            $('#aadharback').trigger('click');
         });
 
         $('#panCardPreview').on('click', function () {
-            $('#pan_card').trigger('click');
+            $('#panCard').trigger('click');
         });
 
         $('#uploadImage').on('click', function () {

@@ -13,18 +13,28 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('middle_name');
-            $table->string('last_name');
-            $table->string('father_first_name');
-            $table->string('father_middle_name');
-            $table->string('father_last_name');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('dob');
-            $table->string('aadhar');
+
+            // Basic info
+            $table->string('first_name', 50);
+            $table->string('middle_name', 50)->nullable();
+            $table->string('last_name', 50);
+
+            // Father details
+            $table->string('father_first_name', 50);
+            $table->string('father_middle_name', 50)->nullable();
+            $table->string('father_last_name', 50);
+
+            // Contact
+            $table->string('email')->nullable();
+            $table->string('phone', 10);
+
+            // Important fields
+            $table->date('dob');       // FIXED: Use date type
+            $table->string('aadhar', 12)->unique();
+
             $table->timestamps();
         });
+
     }
 
     /**

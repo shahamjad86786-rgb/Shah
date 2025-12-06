@@ -52,7 +52,9 @@
                                     <tr>
                                         <th scope="col" style="width: 12%;">#</th>
                                         <th scope="col" style="width: 30%;">NAME</th>
+                                        <th scope="col" style="width: 30%;">Dob</th>
                                         <th scope="col" style="width: 10%;">Phone</th>
+                                        <th scope="col" style="width: 10%;">Aadhar</th>
                                         <th scope="col" style="width: 30%;">ACTION</th>
                                     </tr>
                                 </thead>
@@ -64,28 +66,23 @@
                                             <td class="col-3">
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar avatar-md">
-                                                        <img src="{{ $item->ProfilePicture() ? Storage::url($item->ProfilePicture()->document) : asset('assets/images/defulat-user.jpg') }}" style="width: 40px; height: 40px; object-fit: cover;">
+                                                        <img src="{{ $item->profilePicture()->url ?? asset('assets/images/defulat-user.jpg') }}" style="width: 40px; height: 40px; object-fit: cover;">
                                                     </div>
-                                                    <p class="font-bold ms-3 mb-0">{{ $item->name }}</p>
+                                                    <p class="font-bold ms-3 mb-0">{{ $item->first_name }} {{ $item->middle_name }} {{ $item->last_name }}</p>
                                                 </div>
                                             </td>
+                                            <td>{{ $item->dob->format('d-m-Y') }}</td>
+                                            <td>{{ $item->aadhar }}</td>
                                             <td>
-                                                <a target="_blank"
-                                                    href="https://api.whatsapp.com/send/?phone=91{{ $item->phone }}&text=hello%20{{ urlencode($item->name) }}"><i
-                                                        class="bi bi-whatsapp p-2"></i></a>
-                                                <a target="_blank" href="tel:{{ $item->phone }}"><i
-                                                        class="bi bi-telephone-outbound"></i></a>
+                                                <a target="_blank" href="tel:{{ $item->phone }}">{{ $item->phone }}</a>
                                             </td>
-                                            <td>{{ $item->flat ? $item->flat->name : '-' }}</td>
-                                            <td>{{ $item->flat ? $item->flat->building->name : '-' }}</td>
                                             <td>
-                                                <a href="{{Route('admin.client.show', $item->id)}}"
+                                                <a href="{{Route('admin.client.edit', $item->id)}}"
                                                     class="btn btn-sm btn-warning">
-                                                    <i class="bi bi-pencil-square"></i> Edit
+                                                    <i class="bi bi-pencil-square"></i> 
                                                 </a>
-                                                <a href="javascript:void(0)" onclick="deleteRecord({{ $item->id }})"
-                                                    class="btn btn-sm btn-danger">
-                                                    <i class="bi bi-trash"></i> Delete
+                                                <a href="{{Route('admin.client.delete', $item->id)}}" class="btn btn-sm btn-danger">
+                                                    <i class="bi bi-trash"></i>
                                                 </a>
                                             </td>
                                         </tr>
