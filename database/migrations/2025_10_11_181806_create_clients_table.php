@@ -31,6 +31,7 @@ return new class extends Migration
             // Important fields
             $table->date('dob');       // FIXED: Use date type
             $table->string('aadhar', 12)->unique();
+            $table->string('pancard',10)->unique();
 
             $table->timestamps();
         });

@@ -12,7 +12,19 @@ class ClientsController extends Controller
     public function index(Request $request) {
         
         $search = $request->search;
-        $data = Clients::all(); 
+        $data = Clients::where(function ($query) use ($search) {
+        $query->where('first_name', 'like', '%'.$search.'%')
+              ->orWhere('middle_name', 'like', '%'.$search.'%')
+              ->orWhere('last_name', 'like', '%'.$search.'%')
+              ->orWhere('father_first_name', 'like', '%'.$search.'%')
+              ->orWhere('father_middle_name', 'like', '%'.$search.'%')
+              ->orWhere('father_last_name', 'like', '%'.$search.'%')
+              ->orWhere('email', 'like', '%'.$search.'%')
+              ->orWhere('phone', 'like', '%'.$search.'%')
+              ->orWhere('dob', 'like', '%'.$search.'%')
+              ->orWhere('aadhar', 'like', '%'.$search.'%')
+              ->orWhere('pan_card', 'like', '%'.$search.'%');
+            })->get();
         
 
         return view('client.index', compact('data', 'search'));
@@ -40,6 +52,7 @@ class ClientsController extends Controller
 
             'dob'                => 'required|date|before:today',
             'aadhar'             => 'required|digits:12|unique:clients,aadhar',
+            'pan_card'           => 'required|digits:10|unique:clients,pan_card',
             'phone'              => 'required|digits:10',
             'email'              => 'required|email',
 
@@ -230,7 +243,7 @@ class ClientsController extends Controller
                 'signature',
                 'aadhar_front',
                 'aadhar_back',
-                'pan_card'
+                'pan_card','pan_card_receipt'
             ];
 
             foreach ($fileFields as $field) {

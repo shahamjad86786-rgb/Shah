@@ -72,18 +72,25 @@
 
                     <!-- DOB + Aadhar -->
                     <div class="row mb-3">
-                        <div class="col-6">
+                        <div class="col-4">
                             <label class="form-label text-primary">DOB</label>
                             <input type="date" name="dob" class="form-control"
                                    value="{{ old('dob', isset($data->dob) ? \Carbon\Carbon::parse($data->dob)->format('Y-m-d') : '') }}">
                             @error('dob') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-4">
                             <label class="form-label text-primary">Aadhar</label>
                             <input type="number" name="aadhar" class="form-control" maxlength="12" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                    value="{{ old('aadhar', $data->aadhar ?? '') }}">
                             @error('aadhar') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="col-4">
+                            <label class="form-label text-primary">Pan Card</label>
+                            <input type="text" name="pancard" class="form-control" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                   value="{{ old('pancard', $data->pancard ?? '') }}">
+                            @error('pancard') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
                     </div>
 
@@ -181,7 +188,7 @@
             <div class="card shadow-sm border-0 rounded-4 text-center">
                 <p class="text-primary">Passport Picture</p>
                 <img id="profilePreview"
-                     src="{{ isset($data) && $data->profilePicture()->url ? $data->profilePicture()->url : $default }}"
+                     src="{{ isset($data) ? $data->profilePicture()->url ?? $default : $default }}"
                      class="img-fluid">
                 <input type="file" name="passport_picture" id="passport_picture"
                        class="form-control d-none" onchange="previewImage(this,'profilePreview')">
@@ -193,7 +200,7 @@
             <div class="card shadow-sm border-0 rounded-4 text-center">
                 <p class="text-primary">Signature</p>
                 <img id="signaturePreview"
-                     src="{{ $data->signature()?->url ?? $default }}"
+                     src="{{ isset($data) ? $data->signature()?->url ?? $default  : $default }}"
                      class="img-fluid">
                 <input type="file" name="signature" id="signature"
                        class="form-control d-none" onchange="previewImage(this,'signaturePreview')">
@@ -205,7 +212,7 @@
             <div class="card shadow-sm border-0 rounded-4 text-center">
                 <p class="text-primary">Aadhar Front</p>
                 <img id="aadharFrontPreview"
-                     src="{{ $data->aadharFront()?->url ?? $default }}"
+                     src="{{ isset($data) ? $data->aadharFront()?->url ?? $default  : $default }}"
                      class="img-fluid">
                 <input type="file" name="aadhar_front" id="aadhar_front"
                        class="form-control d-none" onchange="previewImage(this,'aadharFrontPreview')">
@@ -217,7 +224,7 @@
             <div class="card shadow-sm border-0 rounded-4 text-center">
                 <p class="text-primary">Aadhar Back</p>
                 <img id="aadharBackPreview"
-                     src="{{ $data->aadharBack()?->url ?? $default }}"
+                     src="{{ isset($data) ? $data->aadharBack()?->url ?? $default  : $default }}"
                      class="img-fluid">
                 <input type="file" name="aadhar_back" id="aadhar_back" class="form-control d-none" onchange="previewImage(this,'aadharBackPreview')">
             </div>
@@ -228,10 +235,21 @@
             <div class="card shadow-sm border-0 rounded-4 text-center">
                 <p class="text-primary">Pan Card</p>
                 <img id="panCardPreview"
-                     src="{{ $data->panCard()?->url ?? $default }}"
+                     src="{{ isset($data) ? $data->panCard()?->url ?? $default  : $default }}"
                      class="img-fluid">
                 <input type="file" name="pan_card" id="pan_card"
                        class="form-control d-none" onchange="previewImage(this,'panCardPreview')">
+            </div>
+        </div>
+
+        <!-- PAN Card Receipt -->
+        <div class="col-lg-2">
+            <div class="card shadow-sm border-0 rounded-4 text-center">
+                <p class="text-primary">Pan Card Receipt</p>
+                <img id="panCardReceiptPreview"
+                     src="{{ isset($data) ? $data->panCardReceipt()?->url ?? $default  : $default }}"
+                     class="img-fluid">
+                <input type="file" name="pan_card_receipt" id="pan_card_receipt" class="form-control d-none" onchange="previewImage(this,'panCardReceiptPreview')">
             </div>
         </div>
 
@@ -343,7 +361,7 @@
 
         // Trigger file input click on image click
         $('#profilePreview').on('click', function () {
-            $('#profilePicture').trigger('click');
+            $('#passport_picture').trigger('click');
         });
 
         $('#signaturePreview').on('click', function () {
@@ -354,7 +372,8 @@
             $('#aadhar_front').trigger('click');
         });
         
-        $('#aadharbackPreview').on('click', function () {
+        $('#aadharBackPreview').on('click', function () {
+            console.log('asd');
             $('#aadhar_back').trigger('click');
         });
 
@@ -366,6 +385,9 @@
             $('#fileInput').trigger('click'); // Simulate file input click
         });
 
+        $('#panCardReceiptPreview').on('click', function () {
+            $('#pan_card_receipt').trigger('click'); // Simulate file input click
+        });
 
         
 
