@@ -22,5 +22,7 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => Hash::make('Amjad@123'),
         ]);
+
+        $this->call(ClientsSeeder::class);
     }
 }

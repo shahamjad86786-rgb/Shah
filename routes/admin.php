@@ -16,5 +16,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/edit/{id}', [ClientsController::class, 'edit'])->name('edit');
         Route::post('/update/{id}', [ClientsController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [ClientsController::class, 'delete'])->name('delete');
+
+        Route::get('print-aadhar/{id}',[ClientsController::class,'aadhar_print'])->name('aadhar-pdf');
     });
 });

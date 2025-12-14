@@ -50,12 +50,12 @@
                             <table class="table table-hover mb-0">
                                 <thead>
                                     <tr>
-                                        <th scope="col" style="width: 12%;">#</th>
+                                        <th scope="col" style="width: 5%;">#</th>
                                         <th scope="col" style="width: 30%;">NAME</th>
-                                        <th scope="col" style="width: 30%;">Dob</th>
-                                        <th scope="col" style="width: 10%;">Phone</th>
-                                        <th scope="col" style="width: 10%;">Aadhar</th>
-                                        <th scope="col" style="width: 30%;">ACTION</th>
+                                        <th scope="col" style="width: 15%;">Dob</th>
+                                        <th scope="col" style="width: 15%;">Aadhar</th>
+                                        <th scope="col" style="width: 10%;">Phone</th>                                        
+                                        <th scope="col" style="width: 15%;">ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -72,9 +72,17 @@
                                                 </div>
                                             </td>
                                             <td>{{ $item->dob->format('d-m-Y') }}</td>
-                                            <td>{{ $item->aadhar }}</td>
                                             <td>
-                                                <a target="_blank" href="tel:{{ $item->phone }}">{{ $item->phone }}</a>
+                                                {{ $item->aadhar }}
+                                                <a href="{{ route('admin.client.aadhar-pdf', $item->id) }}" target="_blank" class="ms-2">
+                                                    <i class="bi bi-file-earmark-plus-fill text-danger"></i>
+                                                </a>
+                                            </td>
+
+                                            <td>
+                                                <a target="_blank" href="https://wa.me/{{ $item->phone }}?text={{ urlencode('Hello ' . $item->fullName()) }}">
+                                                    {{ $item->phone }}
+                                                </a>
                                             </td>
                                             <td>
                                                 <a href="{{Route('admin.client.edit', $item->id)}}"

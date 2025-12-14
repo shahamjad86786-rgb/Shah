@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Clients;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use setasign\Fpdi\Fpdi;
 
 class ClientsController extends Controller
 {
@@ -23,7 +24,7 @@ class ClientsController extends Controller
               ->orWhere('phone', 'like', '%'.$search.'%')
               ->orWhere('dob', 'like', '%'.$search.'%')
               ->orWhere('aadhar', 'like', '%'.$search.'%')
-              ->orWhere('pan_card', 'like', '%'.$search.'%');
+              ->orWhere('pancard', 'like', '%'.$search.'%');
             })->get();
         
 
@@ -277,27 +278,78 @@ class ClientsController extends Controller
         }
     }
 
-public function delete($id)
-{
-    $data = Clients::find($id);
+    public function delete($id)
+    {
+        $data = Clients::find($id);
 
-    if (!$data) {
-        return back()->withErrors('Client not found');
+        if (!$data) {
+            return back()->withErrors('Client not found');
+        }
+
+        // Delete related address if exists
+        if ($data->address) {
+            $data->address()->delete();
+        }
+
+        // Delete related media if exists
+        if ($data->media) {
+            $data->media()->delete(); // works on morphMany relationship
+        }
+
+        // Delete client
+        $data->delete();
+
+        return redirect()->route('admin.client.index')->with('success', 'Client deleted successfully');
     }
 
-    // Delete related address if exists
-    if ($data->address) {
-        $data->address()->delete();
+    public function aadhar_print($id){
+
+        $client = Clients::find($id);
+
+        
+        ini_set('upload_tmp_dir', storage_path('app/pdf_temp'));
+        if (!file_exists(storage_path('app/pdf_temp'))) {
+            mkdir(storage_path('app/pdf_temp'), 0777, true);
+        }
+
+        $pdf = new Fpdi();
+$pdfPath = public_path('assets/pdf/aadhar_form.pdf');
+$pageCount = $pdf->setSourceFile($pdfPath);
+
+$template = $pdf->importPage(1);
+$pdf->addPage();
+$pdf->useTemplate($template);
+
+return $pdf->Output('D', $client->id.'.pdf');
+
+        // $pdf = new Fpdi();
+
+        // $pdf->setTempDir(storage_path('app/fpdi'));
+
+        // $pdfPath = public_path('assets/pdf/aadhar_form.pdf');
+
+        // $pageCount = $pdf->setSourceFile($pdfPath);
+        
+        // $templateId = $pdf->importPage(1);
+        // $pdf->useTemplate($templateId);
+        // $pdf->SetAutoPageBreak(false, 0);
+        // $pdf->SetFont('Courier', 'B', 14);
+
+        // function writeWithGaps($pdf, $text, $startX, $startY, $gap)
+        // {
+        //     $pdf->SetXY($startX, $startY);
+        //     for ($i = 0; $i < strlen($text); $i++) {
+        //         $pdf->Write(0, $text[$i]);
+        //         $pdf->SetX($pdf->GetX() + $gap); // Move the X position right by the gap size
+        //     }
+        // }
+
+        // // Add pdf
+        // $pdf->AddPage();
+
+        // writeWithGaps($pdf, $data->last_name, 67, 82.5, 2.04);
+
+
+        // return $pdf->Output('D', $client->id.'.pdf');
     }
-
-    // Delete related media if exists
-    if ($data->media) {
-        $data->media()->delete(); // works on morphMany relationship
-    }
-
-    // Delete client
-    $data->delete();
-
-    return redirect()->route('admin.client.index')->with('success', 'Client deleted successfully');
-}
 }

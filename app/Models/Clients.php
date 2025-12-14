@@ -12,13 +12,16 @@ class Clients extends Model
     protected $table = 'clients';
 
     protected $fillable = [
-        'first_name', 'middle_name', 'last_name', 'father_first_name', 'father_middle_name', 'father_last_name', 'email', 'phone', 'dob', 'aadhar','pan_card',
+        'first_name', 'middle_name', 'last_name', 'father_first_name', 'father_middle_name', 'father_last_name', 'email', 'phone', 'dob', 'aadhar','pancard',
     ];
 
     protected $casts = [
         'dob' => 'date',
     ];
 
+    public function fullName(){
+           return $this->first_name.' '.$this->middle_name .' '.$this->last_name;
+    }
     public function Address()
     {
         return $this->hasOne(Address::class);

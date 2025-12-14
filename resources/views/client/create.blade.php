@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3 class="text-primary">{{ isset($data) ? 'Update' : 'Create' }} Client</h3>
-                <p class="text-subtitle text-muted">{{ isset($data) ? 'Update the tenant with all required details.' : 'Add a new tenant to the system with all required details.' }}</p>
+                <p class="text-subtitle text-muted">{{ isset($data) ? 'Update the client with all required details.' : 'Add a new client to the system with all required details.' }}</p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -28,12 +28,27 @@
 
     <section class="section">
         <div class="container">
-            <form id="tenantForm" method="POST"
-      action="{{ isset($data) ? route('admin.client.update', $data->id) : route('admin.client.store') }}"
+            <form id="tenantForm" method="POST" action="{{ isset($data) ? route('admin.client.update', $data->id) : route('admin.client.store') }}"
       enctype="multipart/form-data">
 
     @csrf
     <div class="row g-4">
+
+
+        <!-- ===========================
+                Error Print
+        ============================ -->
+        @if ($errors->any())
+        <div class="col-lg-12">
+            <div class="card shadow-sm border-0 rounded-4 text-center p-3">
+                <p class="text-primary fw-bold">Errors</p>
+                @foreach ($errors->all() as $error)
+                    <p class="text-danger mb-1">{{ $error }}</p>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
 
         <!-- ===========================
              MAIN CLIENT INFORMATION

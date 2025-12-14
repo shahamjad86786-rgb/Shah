@@ -26,12 +26,12 @@ return new class extends Migration
 
             // Contact
             $table->string('email')->nullable();
-            $table->string('phone', 10);
+            $table->string('phone', 10)->nullable();
 
             // Important fields
             $table->date('dob');       // FIXED: Use date type
-            $table->string('aadhar', 12)->unique();
-            $table->string('pancard',10)->unique();
+            $table->string('aadhar', 12)->unique()->nullable();
+            $table->string('pancard',10)->unique()->nullable();
 
             $table->timestamps();
         });
