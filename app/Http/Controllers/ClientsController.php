@@ -7,6 +7,8 @@ use App\Models\Clients;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use setasign\Fpdi\Fpdi;
+use Carbon\Carbon;
+use App\Models\CompanySetting;
 
 class ClientsController extends Controller
 {
@@ -313,43 +315,61 @@ class ClientsController extends Controller
         }
 
         $pdf = new Fpdi();
-$pdfPath = public_path('assets/pdf/aadhar_form.pdf');
-$pageCount = $pdf->setSourceFile($pdfPath);
+        $pdfPath = public_path('assets/pdf/aadhar.pdf');
+        $pageCount = $pdf->setSourceFile($pdfPath);
 
-$template = $pdf->importPage(1);
-$pdf->addPage();
-$pdf->useTemplate($template);
+        // Add pdf
+        $pdf->AddPage();
+        $template = $pdf->importPage(1);
+        $pdf->useTemplate($template);
 
-return $pdf->Output('D', $client->id.'.pdf');
 
-        // $pdf = new Fpdi();
-
-        // $pdf->setTempDir(storage_path('app/fpdi'));
-
-        // $pdfPath = public_path('assets/pdf/aadhar_form.pdf');
-
-        // $pageCount = $pdf->setSourceFile($pdfPath);
         
-        // $templateId = $pdf->importPage(1);
-        // $pdf->useTemplate($templateId);
-        // $pdf->SetAutoPageBreak(false, 0);
-        // $pdf->SetFont('Courier', 'B', 14);
+        $pdf->SetAutoPageBreak(false, 0);
+        $pdf->SetFont('Courier', 'B', 14);
 
-        // function writeWithGaps($pdf, $text, $startX, $startY, $gap)
-        // {
-        //     $pdf->SetXY($startX, $startY);
-        //     for ($i = 0; $i < strlen($text); $i++) {
-        //         $pdf->Write(0, $text[$i]);
-        //         $pdf->SetX($pdf->GetX() + $gap); // Move the X position right by the gap size
-        //     }
-        // }
+        function writeWithGaps($pdf, $text, $startX, $startY, $gap)
+        {
+            $pdf->SetXY($startX, $startY);
+            for ($i = 0; $i < strlen($text); $i++) {
+                $pdf->Write(0, $text[$i]);
+                $pdf->SetX($pdf->GetX() + $gap); // Move the X position right by the gap size
+            }
+        }
 
-        // // Add pdf
-        // $pdf->AddPage();
+        
+        // Get Today
+        $today = Carbon::now();
+        writeWithGaps($pdf,$today->format('d'),141, 20.5, 3);
+        writeWithGaps($pdf,$today->format('m'),159, 20.5, 3);
+        writeWithGaps($pdf,$today->format('Y'),177, 20.5, 3);
 
-        // writeWithGaps($pdf, $data->last_name, 67, 82.5, 2.04);
+        // Aadhar Number
+        writeWithGaps($pdf,$client->aadhar,46,43,4.9);
 
+        // CLient name
+        writeWithGaps($pdf,$client->fullName(),47,51,1);
 
-        // return $pdf->Output('D', $client->id.'.pdf');
+        // Address
+        writeWithGaps($pdf,$client->Address->house_no,47,77,1);
+        writeWithGaps($pdf,$client->Address->building,47,85,1);
+        writeWithGaps($pdf,$client->Address->street,47,94,1);
+        writeWithGaps($pdf,$client->Address->landmark,47,102,1);
+        writeWithGaps($pdf,$client->Address->area,47,110,1);
+        writeWithGaps($pdf,$client->Address->city,47,126,1);
+        writeWithGaps($pdf,$client->Address->state,47,135,1);
+        writeWithGaps($pdf,$client->Address->country,47,145,1);
+        writeWithGaps($pdf,$client->Address->pin_code,47,155,1);
+
+        writeWithGaps($pdf,Carbon::parse($client->dob)->format('d'),47,167,4.9);
+        writeWithGaps($pdf,Carbon::parse($client->dob)->format('m'),65,167,4.9);
+        writeWithGaps($pdf,Carbon::parse($client->dob)->format('Y'),83,167,4.9);
+
+        writeWithGaps($pdf,CompanySetting::where('key', 'name_of_the_certifier')->first()->value,48,183,1);
+        writeWithGaps($pdf,CompanySetting::where('key', 'certifier_designation')->first()->value,48,192,1);
+        writeWithGaps($pdf,CompanySetting::where('key', 'certifier_address')->first()->value,48,200,1);
+        writeWithGaps($pdf,CompanySetting::where('key', 'certifier_contact_number')->first()->value,48,217,1);
+
+        return $pdf->Output('I', $client->id.'.pdf');
     }
 }

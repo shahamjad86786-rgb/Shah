@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0afbc8bfe7cdda7f73181547f35f0665",
+    "content-hash": "26cb6fff423ee0edff5bec050b76b10f",
     "packages": [
         {
             "name": "brick/math",
@@ -3407,30 +3407,6 @@
                 }
             ],
             "time": "2025-08-05T09:57:14+00:00"
-        },
-        {
-            "name": "setasign/fpdi_pdf-parser",
-            "version": "2.1.4",
-            "dist": {
-                "type": "zip",
-                "url": "https://www.setasign.com/downloads/6913817/FPDI_PDF-Parser-2.1.4.zip"
-            },
-            "require": {
-                "setasign/fpdi": "^2.6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "setasign\\FpdiPdfParser\\": "src/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "support": {
-                "email": "support@setasign.com"
-            },
-            "time": "2024-12-10T00:00:00+00:00"
         },
         {
             "name": "symfony/clock",
